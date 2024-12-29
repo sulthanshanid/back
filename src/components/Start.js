@@ -6,7 +6,8 @@ import {
   fetchPlayers,
   postBid,
   updatePlayerStatus,
-} from "../api"; // Ensure you have API functions defined here
+  sendPlayerIdToAPI, // New API function for sending player ID to the WebSocket endpoint
+} from "../api"; // Ensure you have the new API function defined here
 import { FaHammer, FaCheckCircle, FaTimesCircle } from "react-icons/fa"; // Icons for better visuals
 
 const Auction = () => {
@@ -21,6 +22,7 @@ const Auction = () => {
   const [unsold, setUnsold] = useState(false); // Track if the player is unsold
   const [showModal, setShowModal] = useState(false); // Control the modal
   const [showSuccess, setShowSuccess] = useState(false); // Track whether to show success message
+  const [showOverlay, setShowOverlay] = useState(true); // Track whether the overlay should be shown for a player
 
   useEffect(() => {
     const fetchData = async () => {
@@ -126,6 +128,7 @@ const Auction = () => {
     setSold(false); // Reset sold status for the new player
     setUnsold(false); // Reset unsold status for the new player
     setShowModal(false); // Close modal
+    setShowOverlay(true); // Show overlay for the next player
     setCurrentPlayerIndex((prevIndex) =>
       Math.min(prevIndex + 1, players.length - 1)
     ); // Ensure we don't go beyond the last player
@@ -135,7 +138,18 @@ const Auction = () => {
     setSold(false); // Reset sold status for the new player
     setUnsold(false); // Reset unsold status for the new player
     setShowModal(false); // Close modal
+    setShowOverlay(true); // Show overlay for the previous player
     setCurrentPlayerIndex((prevIndex) => Math.max(prevIndex - 1, 0)); // Ensure we don't go before the first player
+  };
+
+  const handleOverlayClick = async () => {
+    const currentPlayer = players[currentPlayerIndex];
+    try {
+      await sendPlayerIdToAPI(currentPlayer.id); // Send the player ID to the WebSocket API
+      setShowOverlay(false); // Remove overlay after sending the ID
+    } catch (err) {
+      console.error("Error sending player ID to API:", err);
+    }
   };
 
   if (loading) {
@@ -183,7 +197,7 @@ const Auction = () => {
           <img
             src={`http://localhost:3000${currentPlayer.photo_path}`}
             alt={currentPlayer.name}
-            className="w-40 h-40 rounded-full object-cover mb-4 border-4 border-gray-500" // Enhanced image styling
+            className="w-40 h-40 rounded-full object-cover mb-4 border-4 border-gray-500"
           />
           {sold && (
             <div className="absolute inset-0 flex flex-col justify-center items-center bg-black bg-opacity-50 animate-slideDown">
@@ -222,6 +236,38 @@ const Auction = () => {
                   )}
             </p>
           </div>
+        </div>
+      </div>
+
+      {/* Teams and Start Overlay */}
+      <div className="mb-8 relative">
+        {showOverlay && (
+          <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-70 z-10">
+            <button
+              onClick={handleOverlayClick}
+              className="bg-yellow-500 text-white py-2 px-4 rounded-lg shadow-lg"
+            >
+              Start Bidding
+            </button>
+          </div>
+        )}
+
+        <h3 className="text-lg font-bold mb-4">Teams</h3>
+        <div className="grid grid-cols-3 gap-4">
+          {teams.map((team) => (
+            <button
+              key={team.id}
+              className="bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded-md flex flex-col items-center shadow-lg"
+              onClick={() => handleBid(team.id)} // Ensure this calls handleBid with the correct team ID
+            >
+              <img
+                src={`http://localhost:3000${team.logo}`}
+                alt={team.name}
+                className="w-12 h-12 rounded-full mb-2"
+              />
+              <span className="text-sm font-medium">{team.name}</span>
+            </button>
+          ))}
         </div>
       </div>
 
@@ -265,26 +311,6 @@ const Auction = () => {
           </div>
         </div>
       )}
-
-      <div className="mb-8">
-        <h3 className="text-lg font-bold mb-4">Teams</h3>
-        <div className="grid grid-cols-3 gap-4">
-          {teams.map((team) => (
-            <button
-              key={team.id}
-              className="bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded-md flex flex-col items-center shadow-lg"
-              onClick={() => handleBid(team.id)} // Ensure this calls handleBid with the correct team ID
-            >
-              <img
-                src={`http://localhost:3000${team.logo}`}
-                alt={team.name}
-                className="w-12 h-12 rounded-full mb-2"
-              />
-              <span className="text-sm font-medium">{team.name}</span>
-            </button>
-          ))}
-        </div>
-      </div>
 
       <div className="flex space-x-4 mb-8">
         <button

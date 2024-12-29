@@ -24,9 +24,7 @@ export const updatePlayer = async (auctionId, playerId, player) => {
 };
 
 export const fetchPlayer = async (auctionId, playerId) => {
-  const response = await axios.get(
-    `${API_URL}/player/${playerId}`
-  );
+  const response = await axios.get(`${API_URL}/player/${playerId}`);
   return response.data;
 };
 
@@ -91,16 +89,16 @@ export const addAuction = async (auctionData) => {
   }
 };
 
-  
-  export const updateAuction = async (id, auctionData) => {
-    const response = await axios.put(`${API_URL}/auction/${id}`, auctionData);
-    return response.data;
-  };
+export const updateAuction = async (id, auctionData) => {
+  const response = await axios.put(`${API_URL}/auction/${id}`, auctionData);
+  return response.data;
+};
 // You can add other API functions here like addPlayer, addTeam, etc.
 
-
 export const searchPlayersByQuery = async (auctionId, query) => {
-  const response = await fetch(`${API_URL}/auction/${auctionId}/search?query=${query}`);
+  const response = await fetch(
+    `${API_URL}/auction/${auctionId}/search?query=${query}`
+  );
   return await response.json();
 };
 
@@ -141,3 +139,19 @@ export const postBid = async (auctionId, data) => {
   return await response.json();
 };
 
+export const sendPlayerIdToAPI = async (playerId) => {
+  try {
+    const response = await fetch(`${API_URL}/ws/${playerId}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (!response.ok) {
+      throw new Error("Failed to send player ID");
+    }
+    return response.json();
+  } catch (err) {
+    console.error("Error sending player ID:", err);
+  }
+};

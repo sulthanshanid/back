@@ -5,13 +5,14 @@ const AuctionViewer = () => {
   const [playerData, setPlayerData] = useState({
     image_path: "",
     name: "",
+    base_price: 0, // Added base_price in playerData state
   });
   const [bidAmount, setBidAmount] = useState(0);
   const [teamData, setTeamData] = useState({
     name: "",
     logo_path: "",
   });
-  const [status, setStatus] = useState(""); // Will be set to 'bidding', 'sold', or 'unsold'
+  const [status, setStatus] = useState(""); // Will be set to 'bidding', 'sold', 'unsold', or 'viewing'
 
   useEffect(() => {
     const socket = new WebSocket("ws://localhost:3000"); // Replace with actual server URL
@@ -49,6 +50,7 @@ const AuctionViewer = () => {
       setPlayerData({
         image_path: message.player_image,
         name: `Player ${message.player_id}`,
+        base_price: message.base_price, // Assuming base_price is provided in NEW_BID message
       });
       setBidAmount(message.bid_value);
       setTeamData({
@@ -63,6 +65,7 @@ const AuctionViewer = () => {
       setPlayerData({
         image_path: message.player_image,
         name: `Player ${message.playerId}`,
+        base_price: message.base_price, // Assuming base_price is provided in PLAYER_SOLD message
       });
       setBidAmount(message.bid_amount);
       setTeamData({
@@ -80,10 +83,28 @@ const AuctionViewer = () => {
         setStatus("bidding"); // Reset to bidding if the status is not unsold
       }
     }
+
+    if (message.type === "VIEW") {
+      console.log("Handling VIEW message");
+      setPlayerData({
+        image_path: message.player_image,
+        name: message.player_name,
+        base_price: message.base_price, // Set base price from the VIEW message
+      });
+      setBidAmount(0); // Reset bid amount since we're viewing base price
+      setTeamData({
+        name: message.team_name, // Assuming this is part of the VIEW message
+        logo_path: message.team_logo, // Assuming this is part of the VIEW message
+      });
+      setStatus("viewing"); // Set the status to 'viewing'
+    }
   };
 
-  // Function to format currency (bid amount)
+  // Function to format currency (bid amount or base price)
   const formatCurrency = (amount) => {
+    if (amount === undefined || amount === null) {
+      return "$0"; // Default to $0 if amount is invalid
+    }
     return `$${amount.toLocaleString()}`;
   };
 
@@ -118,6 +139,12 @@ const AuctionViewer = () => {
         </div>
       )}
 
+      {status === "viewing" && (
+        <div className="absolute inset-0 flex flex-col justify-center items-center bg-black bg-opacity-50 animate-fadeIn">
+          <div className="text-4xl font-bold text-white mb-4">VIEWING</div>
+        </div>
+      )}
+
       {/* Transfermarkt-style player card */}
       <div className="max-w-sm rounded-lg overflow-hidden shadow-lg bg-gray-800 text-white relative">
         {/* Player image */}
@@ -130,11 +157,21 @@ const AuctionViewer = () => {
         <div className="px-6 py-4">
           {/* Player Name and Team */}
           <div className="font-bold text-xl mb-2">{playerData.name}</div>
-          <div className="text-gray-400 text-sm mb-2">{teamData.name}</div>
+          <div className="text-gray-400 text-sm mb-2">TEAM:{teamData.name}</div>
 
-          {/* Bid Amount */}
+          {/* Display either Base Price or Bid Amount */}
           <div className="text-lg text-green-400 font-semibold">
-            {formatCurrency(bidAmount)}
+            {status === "viewing" ? (
+              <>
+                <span className="text-white">Base Price: </span>
+                {formatCurrency(playerData.base_price)}
+              </>
+            ) : (
+              <>
+                <span className="text-white">Bid Amount: </span>
+                {formatCurrency(bidAmount)}
+              </>
+            )}
           </div>
         </div>
 
@@ -144,6 +181,8 @@ const AuctionViewer = () => {
               ? "SOLD"
               : status === "unsold"
               ? "UNSOLD"
+              : status === "viewing"
+              ? "VIEWING"
               : "BIDDING"}
           </span>
         </div>
