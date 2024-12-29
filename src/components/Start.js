@@ -30,8 +30,8 @@ const Auction = () => {
         const teamsRes = await fetchTeams(id);
         const playersRes = await fetchPlayers(id);
 
-        if (auctionRes && auctionRes[0].bid_increment && auctionRes[0].name) {
-          setAuction(auctionRes[0]);
+        if (auctionRes && auctionRes.bid_increment && auctionRes.name) {
+          setAuction(auctionRes);
         }
 
         setTeams(teamsRes);

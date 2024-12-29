@@ -105,7 +105,7 @@ export const searchPlayersByQuery = async (auctionId, query) => {
 };
 
 export const fetchAuctionDetails = async (auctionId) => {
-  const response = await fetch(`${API_URL}/auction/${auctionId}/details`);
+  const response = await fetch(`${API_URL}/auction/${auctionId}/`);
   return await response.json();
 };
 

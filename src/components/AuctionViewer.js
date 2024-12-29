@@ -1,105 +1,152 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
+import { FaHammer, FaTimesCircle } from "react-icons/fa";
 
 const AuctionViewer = () => {
-  const [players, setPlayers] = useState([]);
-  const [currentPlayer, setCurrentPlayer] = useState(null);
-  const [auctionLog, setAuctionLog] = useState([]);
-  const [socket, setSocket] = useState(null);
+  const [playerData, setPlayerData] = useState({
+    image_path: "",
+    name: "",
+  });
+  const [bidAmount, setBidAmount] = useState(0);
+  const [teamData, setTeamData] = useState({
+    name: "",
+    logo_path: "",
+  });
+  const [status, setStatus] = useState(""); // Will be set to 'bidding', 'sold', or 'unsold'
 
   useEffect(() => {
-    const ws = new WebSocket("ws://localhost:8080");
+    const socket = new WebSocket("ws://localhost:3000"); // Replace with actual server URL
 
-    ws.onopen = () => {
-      console.log("Connected to the WebSocket server");
+    socket.onopen = () => {
+      console.log("WebSocket connection established"); // Check if connection is open
     };
 
-    ws.onmessage = (message) => {
-
-      const data = JSON.parse(message.data);
-      console.log(data)
-      switch (data.type) {
-        case "players":
-          setPlayers(data.players);
-          setCurrentPlayer(data.players[0]);
-          break;
-
-        case "bid_update":
-          setPlayers((prevPlayers) =>
-            prevPlayers.map((player) =>
-              player.id === data.playerId
-                ? { ...player, currentBid: data.bid }
-                : player
-            )
-          );
-          if (currentPlayer && currentPlayer.id === data.playerId) {
-            setCurrentPlayer((prev) => ({ ...prev, currentBid: data.bid }));
-          }
-          setAuctionLog((prevLog) => [
-            ...prevLog,
-            `Player ${data.playerId} bid updated to ${data.bid}`,
-          ]);
-          break;
-
-        case "status_update":
-          setAuctionLog((prevLog) => [
-            ...prevLog,
-            `Player ${data.playerId} was ${data.status.toUpperCase()}`,
-          ]);
-          break;
-
-        default:
-          console.warn("Unhandled message type:", data.type);
+    socket.onmessage = (event) => {
+      console.log("Received message from WebSocket:", event.data); // Log the raw message
+      try {
+        const message = JSON.parse(event.data); // Ensure the message is properly parsed
+        console.log("Parsed message:", message);
+        handleWebSocketMessage(message); // Pass the parsed message to the handler
+      } catch (error) {
+        console.error("Error parsing WebSocket message:", error);
       }
     };
 
-    ws.onclose = () => {
-      console.log("Disconnected from the WebSocket server");
+    socket.onclose = () => {
+      console.log("WebSocket connection closed");
     };
-
-    setSocket(ws);
 
     return () => {
-      if (ws) ws.close();
+      socket.close();
     };
-  }, [currentPlayer]);
+  }, []);
 
-  if (!currentPlayer) {
-    return (
-      <div className="text-center text-gray-500">Loading auction details...</div>
-    );
-  }
+  // WebSocket message handler
+  const handleWebSocketMessage = (message) => {
+    console.log("Handling message type:", message.type); // Log to ensure handler is triggered
+
+    if (message.type === "NEW_BID") {
+      console.log("Handling NEW_BID message");
+      setPlayerData({
+        image_path: message.player_image,
+        name: `Player ${message.player_id}`,
+      });
+      setBidAmount(message.bid_value);
+      setTeamData({
+        name: message.team_name,
+        logo_path: message.team_logo,
+      });
+      setStatus("bidding"); // Set the status to "bidding" on new bid
+    }
+
+    if (message.type === "PLAYER_SOLD") {
+      console.log("Handling PLAYER_SOLD message");
+      setPlayerData({
+        image_path: message.player_image,
+        name: `Player ${message.playerId}`,
+      });
+      setBidAmount(message.bid_amount);
+      setTeamData({
+        name: message.team_name,
+        logo_path: message.team_logo,
+      });
+      setStatus("sold"); // Player is now sold
+    }
+
+    if (message.type === "PLAYER_STATUS_UPDATED") {
+      console.log("Handling PLAYER_STATUS_UPDATED message");
+      if (message.status === "unsold") {
+        setStatus("unsold"); // Update the player status to unsold
+      } else {
+        setStatus("bidding"); // Reset to bidding if the status is not unsold
+      }
+    }
+  };
+
+  // Function to format currency (bid amount)
+  const formatCurrency = (amount) => {
+    return `$${amount.toLocaleString()}`;
+  };
 
   return (
-    <div className="p-6 bg-gray-800 text-white min-h-screen">
-      <h1 className="text-4xl font-bold mb-6 text-gray-300">Live Auction Viewer</h1>
-
-      {/* Current Player */}
-      <div className="bg-gray-700 shadow-lg rounded-lg p-6 mb-8 max-w-lg mx-auto">
-        <h2 className="text-xl font-bold mb-4">Current Player</h2>
-        <div className="flex flex-col items-center">
+    <div className="relative">
+      {/* Conditional rendering for player status */}
+      {status === "sold" && (
+        <div className="absolute inset-0 flex flex-col justify-center items-center bg-black bg-opacity-50 animate-fadeIn">
+          <FaHammer className="text-white text-6xl animate-bounce mb-4" />
+          <div className="text-4xl font-bold text-white mb-4">SOLD</div>
           <img
-            src={`http://localhost:3000${currentPlayer.photo_path}`}
-            alt={currentPlayer.name}
-            className="w-40 h-40 rounded-full object-cover mb-4 border-4 border-gray-500"
+            src={`http://localhost:3000${teamData.logo_path}`}
+            alt="team logo"
+            className="w-20 h-20 rounded-full border-4 border-white mb-4 animate-zoomIn"
           />
-          <div className="text-center">
-            <h3 className="text-lg font-bold">{currentPlayer.name}</h3>
-            <p>Position: {currentPlayer.position}</p>
-            <p>Current Bid: ₹{currentPlayer.currentBid}</p>
+          <div className="text-xl font-semibold text-white">
+            {formatCurrency(bidAmount)}
           </div>
         </div>
-      </div>
+      )}
 
-      {/* Auction Log */}
-      <div className="bg-gray-700 p-4 rounded-lg shadow-lg max-w-lg mx-auto">
-        <h3 className="text-lg font-bold mb-2">Auction Log</h3>
-        <ul className="space-y-2 text-gray-400">
-          {auctionLog.map((log, index) => (
-            <li key={index} className="text-sm">
-              {log}
-            </li>
-          ))}
-        </ul>
+      {status === "unsold" && (
+        <div className="absolute inset-0 flex flex-col justify-center items-center bg-black bg-opacity-50 animate-fadeIn">
+          <FaTimesCircle className="text-red-500 text-6xl animate-bounce mb-4" />
+          <div className="text-4xl font-bold text-white mb-4">UNSOLD</div>
+        </div>
+      )}
+
+      {status === "bidding" && (
+        <div className="absolute inset-0 flex flex-col justify-center items-center bg-black bg-opacity-50 animate-fadeIn">
+          <div className="text-4xl font-bold text-white mb-4">BIDDING</div>
+        </div>
+      )}
+
+      {/* Transfermarkt-style player card */}
+      <div className="max-w-sm rounded-lg overflow-hidden shadow-lg bg-gray-800 text-white relative">
+        {/* Player image */}
+        <img
+          className="w-full h-64 object-cover"
+          src={`http://localhost:3000${playerData.image_path}`}
+          alt="Player"
+        />
+
+        <div className="px-6 py-4">
+          {/* Player Name and Team */}
+          <div className="font-bold text-xl mb-2">{playerData.name}</div>
+          <div className="text-gray-400 text-sm mb-2">{teamData.name}</div>
+
+          {/* Bid Amount */}
+          <div className="text-lg text-green-400 font-semibold">
+            {formatCurrency(bidAmount)}
+          </div>
+        </div>
+
+        <div className="absolute top-2 right-2 bg-gray-900 text-xs rounded-full px-4 py-1">
+          <span>
+            {status === "sold"
+              ? "SOLD"
+              : status === "unsold"
+              ? "UNSOLD"
+              : "BIDDING"}
+          </span>
+        </div>
       </div>
     </div>
   );

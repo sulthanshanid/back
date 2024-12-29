@@ -14,6 +14,8 @@ import "./styles.css"; // Import the styles
 import AuctionStart from "./components/Start";
 import EditTeam from "./components/EditTeam";
 import AuctionViewer from "./components/AuctionViewer";
+import AuctionPage from "./components/AuctionViewer";
+import AuctionApp from "./components/AuctionViewer";
 
 function App() {
   return (
