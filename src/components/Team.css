@@ -1,0 +1,99 @@
+/* Team container */
+.team-container {
+  padding: 20px;
+  color: #fff;
+  background: linear-gradient(to bottom right, #1e2130, #3a3d49);
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  max-width: 90%;
+  margin: 20px auto;
+}
+
+/* Team title */
+.team-title {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: #ffcc00;
+}
+
+/* Table layout */
+.team-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #2b2f3b;
+}
+
+.team-table th,
+.team-table td {
+  padding: 10px;
+  text-align: center;
+  border: 1px solid #444;
+}
+
+.team-table th {
+  background: #1e2130;
+  color: #fff;
+}
+
+.team-row:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.team-logo {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+/* Expand button */
+.expand-button {
+  padding: 5px 10px;
+  background-color: #ffcc00;
+  color: #000;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.expand-button:hover {
+  background-color: #ffa500;
+}
+
+/* Player card styles */
+.player-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.player-card {
+  background: #3a3d49;
+  color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  padding: 10px;
+  text-align: center;
+  width: 150px;
+}
+
+.player-photo {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+.player-details p {
+  margin: 5px 0;
+}
+
+.positive {
+  color: #4caf50;
+}
+
+.negative {
+  color: #f44336;
+}

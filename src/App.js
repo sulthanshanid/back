@@ -1,5 +1,10 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  useLocation,
+} from "react-router-dom";
 import Dashboard from "./components/Dashboard";
 import Auctions from "./components/Auctions";
 import AddAuction from "./components/AddAuction";
@@ -13,25 +18,34 @@ import AddTeam from "./components/AddTeam";
 import "./styles.css"; // Import the styles
 import AuctionStart from "./components/Start";
 import EditTeam from "./components/EditTeam";
-import AuctionViewer from "./components/AuctionViewer";
-import AuctionPage from "./components/AuctionViewer";
-import AuctionApp from "./components/AuctionViewer";
+import Customer from "./components/Customer";
 
 function App() {
+  const location = useLocation();
+
   return (
-    <Router>
-      <div>
-        <nav>
-          <ul>
+    <div className="app-container">
+      {/* Global header to display the site name */}
+
+      {/* Show the navigation bar only if the current path is not '/view' */}
+      {location.pathname !== "/view" && (
+        <nav className="navbar">
+          <ul className="nav-list">
             <li>
-              <a href="/dashboard">Dashboard</a>
+              <a href="/dashboard" className="nav-link">
+                Dashboard
+              </a>
             </li>
             <li>
-              <a href="/auctions">Auctions</a>
+              <a href="/auctions" className="nav-link">
+                Auctions
+              </a>
             </li>
           </ul>
         </nav>
+      )}
 
+      <div className="content">
         <Routes>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/auctions" element={<Auctions />} />
@@ -51,12 +65,17 @@ function App() {
             path="/auction/:id/teams/edit/:teamId"
             element={<EditTeam />}
           />
-           <Route path="/view" element={<AuctionViewer />} />
+          <Route path="/view" element={<Customer />} />
         </Routes>
-        
       </div>
-    </Router>
+    </div>
   );
 }
 
-export default App;
+export default function Root() {
+  return (
+    <Router>
+      <App />
+    </Router>
+  );
+}

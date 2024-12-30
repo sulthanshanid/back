@@ -1,0 +1,108 @@
+/* General Styling */
+body {
+  margin: 0;
+  font-family: "Arial", sans-serif;
+  background: linear-gradient(135deg, #1a73e8, #673ab7);
+  color: white;
+  min-height: 100vh;
+}
+
+/* Page Wrapper */
+.others-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+/* Navbar Styling */
+.navbar {
+  margin-bottom: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+.navbar button {
+  background: #ffffff20;
+  color: white;
+  border: 1px solid white;
+  padding: 10px 20px;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.navbar button:hover {
+  background: white;
+  color: #673ab7;
+  transform: scale(1.1);
+}
+
+/* Auction Selection */
+.auction-selection h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.auction-cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.auction-card {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 15px;
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.auction-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+}
+
+.auction-card h3 {
+  margin: 0;
+}
+
+.auction-card button {
+  margin-top: 10px;
+  background: #ffffff20;
+  border: 1px solid white;
+  padding: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.auction-card button:hover {
+  background: white;
+  color: #673ab7;
+}
+
+/* Content Styling */
+.content {
+  width: 100%;
+  max-width: 1200px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
