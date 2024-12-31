@@ -32,10 +32,13 @@ const EditTeam = () => {
     setIsUploading(true); // Set uploading status to true while uploading
 
     try {
-      const response = await fetch("http://localhost:3000/api/upload", {
-        method: "POST",
-        body: formData,
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/upload`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
       if (response.ok) {
         const result = await response.json();
@@ -137,7 +140,7 @@ const EditTeam = () => {
             {logoPath && !isUploading && (
               <div className="mt-2">
                 <img
-                  src={`http://localhost:3000/${logoPath}`}
+                  src={`${process.env.REACT_APP_API_URL}/${logoPath}`}
                   alt="Team Logo"
                   className="w-32 h-32 object-cover rounded-full mx-auto"
                 />

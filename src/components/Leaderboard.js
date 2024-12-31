@@ -8,7 +8,7 @@ const Leaderboard = ({ auctionId }) => {
     const fetchLeaderboard = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/leaderboard/${auctionId}`
+          `${process.env.REACT_APP_API_URL}/api/leaderboard/${auctionId}`
         );
         const data = await response.json();
         setLeaderboard(data); // Assuming data is an array of leaderboard entries
@@ -38,8 +38,8 @@ const Leaderboard = ({ auctionId }) => {
           </thead>
           <tbody>
             {leaderboard.map((entry, index) => {
-              const playerPhotoUrl = `http://localhost:3000${entry.photo_path}`;
-              const teamLogoUrl = `http://localhost:3000${entry.logo}`;
+              const playerPhotoUrl = `${process.env.REACT_APP_API_URL}${entry.photo_path}`;
+              const teamLogoUrl = `${process.env.REACT_APP_API_URL}${entry.logo}`;
 
               return (
                 <tr key={index}>

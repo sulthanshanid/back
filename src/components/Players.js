@@ -43,13 +43,15 @@ const Players = () => {
               className="bg-white p-4 rounded-lg shadow-md flex flex-col items-center"
             >
               <img
-                src={`http://localhost:3000${player.photo_path}`} // Adjust the path based on your API's file serving logic
+                src={`${process.env.REACT_APP_API_URL}${player.photo_path}`} // Adjust the path based on your API's file serving logic
                 alt={player.name}
                 className="w-32 h-32 object-cover rounded-full mb-4"
               />
               <span className="text-lg font-medium">{player.name}</span>
               <span className="text-sm text-gray-500">{player.position}</span>
-              <span className="text-sm text-gray-500">{player.base_price} $</span>
+              <span className="text-sm text-gray-500">
+                {player.base_price} $
+              </span>
               <Link
                 to={`/auction/${id}/players/edit/${player.id}`}
                 className="mt-2 text-blue-600 hover:underline"

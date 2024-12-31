@@ -24,7 +24,7 @@ function App() {
   const location = useLocation();
 
   return (
-    <div className="app-container">
+    <div style={{ maxWidth: '100%', overflowX: 'auto', padding: '16px' }}>
       {/* Global header to display the site name */}
 
       {/* Show the navigation bar only if the current path is not '/view' */}
@@ -45,7 +45,7 @@ function App() {
         </nav>
       )}
 
-      <div className="content">
+      <div >
         <Routes>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/auctions" element={<Auctions />} />

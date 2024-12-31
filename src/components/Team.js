@@ -9,7 +9,7 @@ const Team = ({ auctionId }) => {
     const fetchTeams = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/auctions/${auctionId}/teamstat`
+          `${process.env.REACT_APP_API_URL}/auctions/${auctionId}/teamstat`
         );
         const data = await response.json();
         setTeams(data);
@@ -46,7 +46,7 @@ const Team = ({ auctionId }) => {
                 <tr className="team-row">
                   <td>
                     <img
-                      src={`http://localhost:3000${
+                      src={`${process.env.REACT_APP_API_URL}${
                         team.logo || "/default-logo.jpg"
                       }`}
                       alt={team.name}
@@ -76,7 +76,7 @@ const Team = ({ auctionId }) => {
                           team.players.map((player) => (
                             <div key={player.id} className="player-card">
                               <img
-                                src={`http://localhost:3000${player.photo_path}`}
+                                src={`${process.env.REACT_APP_API_URL}${player.photo_path}`}
                                 alt={player.name}
                                 className="player-photo"
                               />

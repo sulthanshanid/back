@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { FaHammer, FaTimesCircle } from "react-icons/fa";
-
 const AuctionViewer = () => {
   const [playerData, setPlayerData] = useState({
     image_path: "",
@@ -15,7 +14,7 @@ const AuctionViewer = () => {
   const [status, setStatus] = useState(""); // Will be set to 'bidding', 'sold', 'unsold', or 'viewing'
 
   useEffect(() => {
-    const socket = new WebSocket("ws://localhost:3000"); // Replace with actual server URL
+    const socket = new WebSocket(`${process.env.REACT_APP_WS_URL}`); // Replace with actual server URL
 
     socket.onopen = () => {
       console.log("WebSocket connection established"); // Check if connection is open
@@ -49,7 +48,7 @@ const AuctionViewer = () => {
       console.log("Handling NEW_BID message");
       setPlayerData({
         image_path: message.player_image,
-        name: `Player ${message.player_id}`,
+        name: message.player_name,
         base_price: message.base_price, // Assuming base_price is provided in NEW_BID message
       });
       setBidAmount(message.bid_value);
@@ -64,7 +63,7 @@ const AuctionViewer = () => {
       console.log("Handling PLAYER_SOLD message");
       setPlayerData({
         image_path: message.player_image,
-        name: `Player ${message.playerId}`,
+        name: `${message.player_name}`,
         base_price: message.base_price, // Assuming base_price is provided in PLAYER_SOLD message
       });
       setBidAmount(message.bid_amount);
@@ -116,7 +115,7 @@ const AuctionViewer = () => {
           <FaHammer className="text-white text-6xl animate-bounce mb-4" />
           <div className="text-4xl font-bold text-white mb-4">SOLD</div>
           <img
-            src={`http://localhost:3000${teamData.logo_path}`}
+            src={`${process.env.REACT_APP_API_URL}${teamData.logo_path}`}
             alt="team logo"
             className="w-20 h-20 rounded-full border-4 border-white mb-4 animate-zoomIn"
           />
@@ -150,7 +149,7 @@ const AuctionViewer = () => {
         {/* Player image */}
         <img
           className="w-full h-64 object-cover"
-          src={`http://localhost:3000${playerData.image_path}`}
+          src={`${process.env.REACT_APP_API_URL}${playerData.image_path}`}
           alt="Player"
         />
 

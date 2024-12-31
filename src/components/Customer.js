@@ -17,7 +17,9 @@ const Others = () => {
   useEffect(() => {
     const fetchAuctions = async () => {
       try {
-        const response = await fetch("http://localhost:3000/api/auctions"); // Replace with your API URL
+        const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/auctions`
+        ); // Replace with your API URL
         const data = await response.json();
         setAuctions(data); // Assuming the response contains an array of auctions
       } catch (error) {

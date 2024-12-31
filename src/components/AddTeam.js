@@ -20,7 +20,7 @@ const AddTeam = () => {
     setIsUploading(true); // Set uploading status to true while uploading
 
     try {
-      const response = await fetch("http://localhost:3000/api/upload", {
+      const response = await fetch("${process.env.REACT_APP_API_URL}/upload", {
         method: "POST",
         body: formData,
       });

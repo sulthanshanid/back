@@ -195,7 +195,7 @@ const Auction = () => {
         <h2 className="text-xl font-bold mb-4">Current Player</h2>
         <div className="flex flex-col items-center space-y-4 relative">
           <img
-            src={`http://localhost:3000${currentPlayer.photo_path}`}
+            src={`${process.env.REACT_APP_API_URL}${currentPlayer.photo_path}`}
             alt={currentPlayer.name}
             className="w-40 h-40 rounded-full object-cover mb-4 border-4 border-gray-500"
           />
@@ -204,7 +204,7 @@ const Auction = () => {
               <FaHammer className="text-white text-6xl animate-bounce mb-4" />
               <div className="text-4xl font-bold text-white mb-4">SOLD</div>
               <img
-                src={`http://localhost:3000${
+                src={`${process.env.REACT_APP_API_URL}${
                   teams.find((team) => team.id === currentPlayer.team_id)?.logo
                 }`}
                 alt="team logo"
@@ -261,7 +261,7 @@ const Auction = () => {
               onClick={() => handleBid(team.id)} // Ensure this calls handleBid with the correct team ID
             >
               <img
-                src={`http://localhost:3000${team.logo}`}
+                src={`${process.env.REACT_APP_API_URL}${team.logo}`}
                 alt={team.name}
                 className="w-12 h-12 rounded-full mb-2"
               />
@@ -282,7 +282,7 @@ const Auction = () => {
               ✕
             </button>
             <img
-              src={`http://localhost:3000${currentPlayer.photo_path}`}
+              src={`${process.env.REACT_APP_API_URL}${currentPlayer.photo_path}`}
               alt={currentPlayer.name}
               className="w-32 h-32 rounded-full object-cover mx-auto mb-4"
             />
@@ -293,7 +293,7 @@ const Auction = () => {
                   SOLD
                 </div>
                 <img
-                  src={`http://localhost:3000${
+                  src={`${process.env.REACT_APP_API_URL}${
                     teams.find((team) => team.id === currentPlayer.team_id)
                       ?.logo
                   }`}

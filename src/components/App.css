@@ -1,0 +1,163 @@
+/* Custom Fonts */
+@font-face {
+  font-family: "Edosz";
+  src: url(`${process.env.REACT_APP_API_URL}/uploads/edosz.ttf`)
+    format("truetype");
+}
+
+@font-face {
+  font-family: "Morganite Black";
+  src: url(`${process.env.REACT_APP_API_URL}/uploads/Morganite-Black.ttf`)
+    format("truetype");
+}
+
+/* Global Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+}
+
+.transfer-card {
+  width: 45%; /* Adjusted width for side-by-side display */
+  height: 1200px; /* Increased card height */
+  background: url(`${process.env.REACT_APP_API_URL}/uploads/background-image.jpg`)
+    center/cover no-repeat;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  position: relative;
+}
+
+.header {
+  background: transparent;
+  color: #ffffff;
+  text-transform: uppercase;
+  font-family: "Morganite Black", sans-serif;
+  font-size: 195px;
+  padding: 40px 0;
+  letter-spacing: 5px;
+  position: relative;
+  z-index: 1;
+}
+
+.main-content {
+  position: relative;
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 50px 0;
+  z-index: 0;
+}
+
+.player-image {
+  position: absolute;
+  top: -150px; /* Adjust to overlap the "DONE DEAL" text */
+  z-index: 2; /* Ensures the player image is above the text */
+  width: 450px;
+}
+
+.player-image img {
+  width: 450px;
+  height: auto;
+  border-radius: 20px;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+}
+
+.background-logo img {
+  position: absolute;
+  width: 500px;
+  opacity: 0.05;
+}
+
+.transfer-info {
+  padding: 30px;
+  background: rgba(255, 255, 255, 0.85);
+  margin-top: auto;
+}
+
+.club-icons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.club-icons img {
+  width: 150px; /* Increased size of the club logo */
+  height: 150px;
+  margin-right: 20px;
+}
+
+.club-icons span {
+  font-size: 50px; /* Adjust the font size */
+  color: #000;
+  font-family: "Edosz", Arial, sans-serif;
+  font-weight: bold;
+}
+
+.player-details {
+  text-transform: uppercase;
+  font-family: "Edosz", Arial, sans-serif;
+}
+
+.player-details h2 {
+  font-size: 60px;
+  color: #37474f;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.transfer-fee {
+  font-size: 35px;
+  color: #d32f2f;
+  font-weight: bold;
+}
+
+/* Flexbox container for both cards */
+.relative {
+  display: flex;
+  justify-content: space-between;
+  width: 90%; /* Adjusted width of the container */
+  gap: 30px; /* Added space between cards */
+}
+
+.max-w-sm {
+  width: 45%; /* Set width of each card */
+}
+
+.text-gray-400 {
+  color: #9e9e9e;
+}
+
+.text-white {
+  color: #ffffff;
+}
+
+.bg-gray-800 {
+  background-color: #424242;
+}
+
+.shadow-lg {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.text-green-400 {
+  color: #4caf50;
+}
+
+.text-xs {
+  font-size: 0.75rem;
+}
