@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { addAuction } from "../api";
 import { useNavigate } from "react-router-dom";
-
+//jj
 const AddAuction = () => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
