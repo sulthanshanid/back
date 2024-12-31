@@ -8,7 +8,7 @@ const Leaderboard = ({ auctionId }) => {
     const fetchLeaderboard = async () => {
       try {
         const response = await fetch(
-          `${process.env.REACT_APP_API_URL}/api/leaderboard/${auctionId}`
+          `${process.env.REACT_APP_API_URL}/leaderboard/${auctionId}`
         );
         const data = await response.json();
         setLeaderboard(data); // Assuming data is an array of leaderboard entries
